@@ -7,7 +7,8 @@ class Poison{
     }
     show()
     {
-        fill(255, 0, 0)
+        stroke(255,0,0)
+        fill(color(255, 0, 0))
         ellipse(this.x, this.y, this.rad, this.rad)
     }
     update()

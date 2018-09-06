@@ -7,7 +7,8 @@ class Food{
     }
     show()
     {
-        fill(0, 255, 0)
+        stroke(0,255,0)
+        fill(color(0, 255, 0))
         ellipse(this.x, this.y, this.rad, this.rad)
     }
     update()

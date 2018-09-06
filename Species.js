@@ -5,13 +5,13 @@ class Species{
         this.location = new Vector([x,y])
         this.accleration = new Vector([0,0])
         this.velocity = new Vector([0,-1])
-        this.maxforce = 0.04
+        this.maxforce = 0.05
         this.rad = 10  
         this.maxspeed = 3
         this.compression = 0.9
-        this.slowingRadius = 20
+        this.detectRadius = 20
         this.health =1
-        this.dna = [ random(-5,5),random(-5,5) ]
+        this.dna = [ random(-2,2),random(-2,2),random(0,150),random(0,150) ]
     }
 
     update()
@@ -25,8 +25,8 @@ class Species{
 
     behaviors(good , bad)
     {
-        var steerG = this.eat(good , 0.1)
-        var steerB = this.eat(bad , -0.1)
+        var steerG = this.eat(good , 0.1, this.dna[2])
+        var steerB = this.eat(bad , -0.1, this.dna[3])
         
         steerG.multiply(this.dna[0])
         steerB.multiply(this.dna[1])
@@ -40,14 +40,14 @@ class Species{
         return (this.health<0)
     }
 
-    eat(list , nutrition)
+    eat(list , nutrition , perception)
     {
         let min = Infinity
         let index = null
         for(let i =0 ; i<list.length; i++)
         {
             let dist = Math.sqrt( Math.pow( list[i].x - this.location.values[0] , 2 ) + Math.pow( list[i].y - this.location.values[1] , 2 ) )
-            if(min >= dist)
+            if(min >= dist && dist < perception)
             {
                 min = dist
                 index = i
@@ -77,14 +77,18 @@ class Species{
          return this.steering
     }
 
-    flee(target)
+    boundary()
     {
-         this.steering = Vector.sub(this.location, target)
-         this.steering.normalize()
-         this.steering.multiply(this.maxspeed)
-         this.steering.sub(this.velocity)
-         this.steering.limit(this.maxforce)
-         return this.steering
+        if(this.location.values[0]>width-20 || this.location.values[0]<20)
+        {
+            this.seek(new Vector([ height/2, width/2 ])) 
+            this.accleration.add(this.steering)
+        }
+        else if(this.location.values[1]>height-20 || this.location.values[1]<20)
+        {
+            this.seek(new Vector([ height/2, width/2 ]))
+            this.accleration.add(this.steering)
+        }
     }
 
     show()
@@ -103,11 +107,17 @@ class Species{
         {
             this.compression = 0.9
         }
-        // stroke(0 , 255 , 0)
-        // line(0,0,0, this.dna[0]*30)
+        stroke(0 , 255 , 0)
+        line(0,0, this.dna[0]*30, 0)
 
-        // stroke(255 , 0 , 0)
-        // line(0,0,0, this.dna[1]*30)
+        stroke(255 , 0 , 0)
+        line(0,0, this.dna[1]*30 , 0)
+        noFill()
+        stroke(0 , 255 , 0)
+        ellipse(0,0,this.dna[2])
+        stroke(255, 0 , 0)
+        ellipse(0,0,this.dna[3])
+
         var grn = color( 0, 255, 0)
         var red = color( 255, 0 ,0)
         var col = lerpColor(red, grn , this.health)

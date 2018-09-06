@@ -2,16 +2,19 @@ var species =[];
 var target =[]
 var foods =[]
 var poisons = []
+var poisonNo =10
+var foodNo = 10
+var speciesNo =10
 function setup()
 {
-    createCanvas(800,600)
+    createCanvas(600,600)
     counter =0
-    for(let i =0 ;i< 10 ;i++)
+    for(let i =0 ;i< foodNo ;i++)
     {
         foods.push(new Food())
         poisons.push(new Poison())
     }
-    for(let i =0 ;i< 10 ;i++)
+    for(let i =0 ;i< speciesNo ;i++)
     {
         species.push(new Species(random(height/2),random(width/2)))
     }
@@ -21,13 +24,17 @@ function draw()
 {   
     counter +=1
     background(0)
-    if(random(1)<0.03)
+    if(random(1)<0.02)
     {
         foods.push(new Food())
     }
-    for(let i=0 ; i<species.length; i++)
+    if(random(1)<0.007)
     {
-        stroke(255)
+        poisons.push(new Poison())
+    }
+    for(let i=species.length-1 ; i>=0; i--)
+    {
+        species[i].boundary()
         species[i].behaviors(foods, poisons)
         species[i].show()
         species[i].update()
@@ -35,13 +42,14 @@ function draw()
         {
             species.splice(i,1)
         }
+        
     }
 }
 
 
 function reset()
 {
-    for(let i =0 ;i< 10 ;i++)
+    for(let i =0 ;i< foodNo ;i++)
     {
         foods.push(new Food())
         poisons.push(new Poison())
