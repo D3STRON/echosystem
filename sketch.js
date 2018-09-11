@@ -42,11 +42,18 @@ function draw()
         {
             species.splice(i,1)
         }
-        
     }
+    show(foods)
+    show(poisons)
 }
 
-
+function show(list)
+{
+    for(let i = 0 ; i<list.length;i++)
+    {
+        list[i].show()
+    }
+}
 function reset()
 {
     for(let i =0 ;i< foodNo ;i++)
