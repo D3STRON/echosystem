@@ -6,7 +6,7 @@ class Species{
         this.accleration = new Vector([0,0])
         this.velocity = new Vector([0,-1])
         this.maxforce = 0.07
-        this.rad = 10  
+        this.rad = 8  
         this.maxspeed = 4
         this.compression = 0.9
         this.detectRadius = 20
@@ -142,16 +142,16 @@ class Species{
         {
             this.compression = 0.9
         }
-        stroke(0 , 255 , 0)
-        line(0,0, this.dna[0]*30, 0)
+        // stroke(0 , 255 , 0)
+        // line(0,0, this.dna[0]*30, 0)
 
-        stroke(255 , 0 , 0)
-        line(0,0, this.dna[1]*30 , 0)
-        noFill()
-        stroke(0 , 255 , 0)
-        ellipse(0,0,this.dna[2])
-        stroke(255, 0 , 0)
-        ellipse(0,0,this.dna[3])
+        // stroke(255 , 0 , 0)
+        // line(0,0, this.dna[1]*30 , 0)
+        // noFill()
+        // stroke(0 , 255 , 0)
+        // ellipse(0,0,this.dna[2])
+        // stroke(255, 0 , 0)
+        // ellipse(0,0,this.dna[3])
 
         var grn = color( 0, 255, 0)
         var red = color( 255, 0 ,0)

@@ -5,6 +5,7 @@ var poisons = []
 var poisonNo =10
 var foodNo = 10
 var speciesNo =10
+var predator 
 function setup()
 {
     createCanvas(600,600)
@@ -14,6 +15,7 @@ function setup()
         foods.push(new Food())
         poisons.push(new Poison())
     }
+    predator = new Predator(random(height/2),random(width/2))
     for(let i =0 ;i< speciesNo ;i++)
     {
         species.push(new Species(random(height/2),random(width/2)))
@@ -50,6 +52,10 @@ function draw()
             species.splice(i,1)
         }
     }
+    predator.eat(species)
+    predator.show()
+    predator.boundary()
+    predator.update()
     show(foods)
     show(poisons)
 }
