@@ -1,8 +1,15 @@
 class Food{
-    constructor()
+    constructor(x,y)
     {
-        this.y = random(10,height -10)
-        this.x = random(10, width - 10)
+        if(x && y)
+        {
+            this.y = y
+            this.x = x   
+        }
+        else{
+            this.y = random(10,height -10)
+            this.x = random(10, width - 10)
+        }
         this.rad = 5
     }
     show()

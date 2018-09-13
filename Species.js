@@ -11,17 +11,40 @@ class Species{
         this.compression = 0.9
         this.detectRadius = 20
         this.health =1
-        if(z)
+        this.mutation_rate = 0.5
+        if(dna)
         {
-            this.dna = z
+            this.dna=[]
+            this.dna[0] = this.mutate(dna[0], 0.1)
+            this.dna[1] = this.mutate(dna[1], 0.1)
+            this.dna[2] = this.mutate(dna[2], 10)
+            this.dna[3] = this.mutate(dna[3], 10)
         }
         else{
             this.dna = [ random(-2,2),random(-2,2),random(0,150),random(0,150) ]
         }
     }
+    
+    mutate(dna,lim)
+    {
+        if(random(1)<this.mutation_rate)
+        {
+            return dna + random(-1*lim, lim)
+        }
+        return dna
+    }
+
+    clone()
+    {
+        if(random(0,1)<0.001 && this.health>0.8)
+        {
+            return new Species(this.location.values[0] , this.location.values[1], this.dna)
+        }
+        return null
+    }
     update()
     {
-        this.health -= 0.001 
+        this.health -= 0.002 
         this.velocity.add(this.accleration)
         this.velocity.limit(this.maxspeed)
         this.location.add(this.velocity)
@@ -31,8 +54,8 @@ class Species{
     behaviors(good , bad)
     {
         //find species steering forces towards nearest food and poison saperately
-        var steerG = this.eat(good , 0.1, this.dna[2])
-        var steerB = this.eat(bad , -0.1, this.dna[3])
+        var steerG = this.eat(good , 0.2, this.dna[2])
+        var steerB = this.eat(bad , -0.2, this.dna[3])
         
         //give them their respective prioritty or importance
         steerG.multiply(this.dna[0])
@@ -69,6 +92,7 @@ class Species{
                 index = list[i]
             }
         }
+
         //if we do have a food or poison not in poximity but at minimum distance then seek it
         if(index != null)
         {

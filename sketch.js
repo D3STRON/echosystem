@@ -24,11 +24,11 @@ function draw()
 {   
     counter +=1
     background(0)
-    if(random(1)<0.02)
+    if(random(1)<0.05)
     {
         foods.push(new Food())
     }
-    if(random(1)<0.007)
+    if(random(1)<0.005)
     {
         poisons.push(new Poison())
     }
@@ -38,8 +38,15 @@ function draw()
         species[i].behaviors(foods, poisons)
         species[i].show()
         species[i].update()
+        //cloning is done before splicing to ensure that clone is not done on spiced object
+        var newSpecies = species[i].clone()
+        if(newSpecies != null)
+        {
+            species.push(newSpecies)
+        }
         if(species[i].dead())
         {
+            foods.push(new Food(species[i].location.values[0], species[i].location.values[1]))
             species.splice(i,1)
         }
     }
