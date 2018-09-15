@@ -3,12 +3,10 @@ class Food{
     {
         if(x && y)
         {
-            this.y = y
-            this.x = x   
+            this.location = new Vector([x, y])   
         }
         else{
-            this.y = random(10,height -10)
-            this.x = random(10, width - 10)
+            this.location = new Vector ([random(10,height -10), random(10, width - 10)])
         }
         this.rad = 5
     }
@@ -16,7 +14,7 @@ class Food{
     {
         stroke(0,255,0)
         fill(color(0, 255, 0))
-        ellipse(this.x, this.y, this.rad, this.rad)
+        ellipse(this.location.values[0], this.location.values[1], this.rad, this.rad)
     }
     update()
     {

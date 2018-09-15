@@ -46,7 +46,7 @@ class Species{
     }
     update()
     {
-        this.health -= 0.0015
+        this.health -= 0.002
         this.velocity.add(this.accleration)
         this.velocity.limit(this.maxspeed)
         this.location.add(this.velocity)
@@ -56,9 +56,9 @@ class Species{
     behaviors(good , bad, avoid)
     {
         //find species steering forces towards nearest food and poison saperately
-        var steerG = this.eat(good , 0.3, this.dna[3])
-        var steerB = this.eat(bad , -0.2, this.dna[4])
-        var steerP = this.flee(avoid, this.dna[5])
+        var steerG = this.descide(good , this.dna[3], 0.3)
+        var steerB = this.descide(bad ,  this.dna[4], -0.2)
+        var steerP = this.descide(avoid, this.dna[5])
         
         //give them their respective prioritty or importance
         steerG.multiply(this.dna[0])
@@ -76,37 +76,18 @@ class Species{
         return (this.health<0)
     }
    
-    flee(list, perception)
-    {
-        let min = Infinity
-        let object = null
-        for(let i = list.length-1 ; i>=0 ;i--)
-        {
-            var dist = Vector.sub(list[i].location, this.location)
-            dist = dist.magnitude()
-            if(min>dist && dist<perception)
-            {
-                min = dist
-                object = list[i]
-            }
-        }
-        if(object != null)
-        {
-            return this.seek(object.location)
-        }
-        return new Vector([0 ,0])
-    }
 
-    eat(list , nutrition , perception)
+    descide(list , perception, nutrition)
     {
         let min = Infinity
         let index = null
         // when there are chances of slicing the list its better to move backward as the index of the upcoming elements remain the same
         for(let i =list.length-1 ; i>=0; i--)
         {
-            let dist = Math.sqrt( Math.pow( list[i].x - this.location.values[0] , 2 ) + Math.pow( list[i].y - this.location.values[1] , 2 ) )
+            var dist = Vector.sub(list[i].location, this.location)
+            dist = dist.magnitude()
             //All food or poison in the given proximity will be eaten
-            if(dist<this.maxspeed)
+            if(dist<this.maxspeed && nutrition)
             {
                 list.splice(i,1)
                 this.health += nutrition
@@ -122,7 +103,7 @@ class Species{
         //if we do have a food or poison not in poximity but at minimum distance then seek it
         if(index != null)
         {
-            return this.seek(new Vector([ index.x , index.y ]))
+            return this.seek(index.location)
         }
         return new Vector([ 0 , 0 ])
     }

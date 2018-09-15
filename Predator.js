@@ -4,30 +4,45 @@ class Predator{
         this.velocity= new Vector([ 0, -1])
         this.accleration = new Vector([ 0, 0])
         this.location = new Vector([ x, y])
-        this.maxspeed = 2
+        this.maxspeed = 3.5
         this.rad =13
         this.maxforce = 0.07
         this.compression = 0.9
-        this.dna = [ random(-1,1), random(-1,1), random(0,50), random(0,50)]
+        this.health = 1
+        this.brain = new NeuralNetwork(14, 5, 2)
     }
    
-    behaviors(Sp, Fo)
+    think(Foods , Species)
     {
-        var steerSp = this.eat(Sp, 0.3, this.dna[2])
-        var steerFo = this.eat(Fo, 0.1, this.dna[3])
+        let sp = this.detect(Species)
+        let tar = this.detect(Foods)
+        if(sp!= null && fd!= null)
+        {
+            let inputs = sp.location.values.concat(sp.accleration.values).concat(sp.velocity.values).concat(tar.location.values).concat(this.location.values).concat(this.accleration.values).concat(this.velocity.values)
+            console.log(inputs)
+            let outputs = this.brain.feedforward(inputs)
+            if(outputs.data[0]>outputs.data[1])
+            {
+                tar = sp
+            }
+            this.seek(tar.location)
+            this.accleration.add(this.steering)
+        }
     }
 
-    eat(list, nutrition, perception)
+    detect(list, nutrition)
     {
         let min = Infinity
         let object = null
         for(let i = list.length-1 ; i>=0 ;i--)
         {
             var dist = Vector.sub(list[i].location, this.location)
+            var dist = Vector.sub(target, this.location)
             dist = dist.magnitude()
             if(dist<5)
             {
-                list.splice(i,1)
+                //list.splice(i,1)
+                //this.health += nutrition
             }
             else if(min>dist)
             {
@@ -35,11 +50,7 @@ class Predator{
                 object = list[i]
             }
         }
-        if(object != null)
-        {
-            this.seek(object.location)
-            this.accleration.add(this.steering)
-        }
+        return object
     }
 
     update()
@@ -90,18 +101,7 @@ class Predator{
         {
             this.compression = 0.9
         }
-        // stroke(0 , 255 , 0)
-        // line(0,0, this.dna[0]*30, 0)
-
-        // stroke(255 , 0 , 0)
-        // line(0,0, this.dna[1]*30 , 0)
-        // noFill()
-        // stroke(0 , 255 , 0)
-        // ellipse(0,0,this.dna[2])
-        // stroke(255, 0 , 0)
-        // ellipse(0,0,this.dna[3])
         var col = 255
-        
         fill(col)
         stroke(col)
         ellipse(0, this.rad-7, 0.5*this.rad*this.compression, this.rad*this.compression)
@@ -112,3 +112,39 @@ class Predator{
     }
 
 }
+
+/*
+
+behaviors(Sp, Fo)
+    {
+        var steerSp = this.eat(Sp, 0.3, this.dna[2])
+        var steerFo = this.eat(Fo, 0.1, this.dna[3])
+    }
+
+    eat(list)
+    {
+        let min = Infinity
+        let object = null
+        for(let i = list.length-1 ; i>=0 ;i--)
+        {
+            var dist = Vector.sub(list[i].location, this.location)
+            dist = dist.magnitude()
+            if(dist<5)
+            {
+                savedSpecies = list[i]
+                list.splice(i,1)
+            }
+            else if(min>dist)
+            {
+                min = dist
+                object = list[i]
+            }
+        }
+        if(object != null)
+        {
+            this.seek(object.location)
+            this.accleration.add(this.steering)
+        }
+    }
+
+*/
