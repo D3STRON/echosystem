@@ -3,9 +3,9 @@ var target =[]
 var foods =[]
 var poisons = []
 var poisonNo =10
-var foodNo = 10
-var speciesNo =10
-var predator 
+var foodNo = 50
+var speciesNo =20
+var predators = [] 
 function setup()
 {
     createCanvas(600,600)
@@ -13,9 +13,10 @@ function setup()
     for(let i =0 ;i< foodNo ;i++)
     {
         foods.push(new Food())
-        poisons.push(new Poison())
+       // poisons.push(new Poison())
     }
-    predator = new Predator(random(height/2),random(width/2))
+    predators.push(new Predator(random(height/2),random(width/2)))
+    predators.push(new Predator(random(height/2),random(width/2)))
     for(let i =0 ;i< speciesNo ;i++)
     {
         species.push(new Species(random(height/2),random(width/2)))
@@ -37,7 +38,7 @@ function draw()
     for(let i=species.length-1 ; i>=0; i--)
     {
         species[i].boundary()
-        species[i].behaviors(foods, poisons)
+        species[i].behaviors(foods, poisons, predators)
         species[i].show()
         species[i].update()
         //cloning is done before splicing to ensure that clone is not done on spiced object
@@ -52,10 +53,13 @@ function draw()
             species.splice(i,1)
         }
     }
-    predator.eat(species)
-    predator.show()
-    predator.boundary()
-    predator.update()
+    for( let i = predators.length-1; i>=0 ;i--)
+    {
+        predators[i].eat(species)
+        predators[i].show()
+        predators[i].boundary()
+        predators[i].update()
+    }
     show(foods)
     show(poisons)
 }

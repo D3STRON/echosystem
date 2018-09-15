@@ -17,11 +17,13 @@ class Species{
             this.dna=[]
             this.dna[0] = this.mutate(dna[0], 0.1)
             this.dna[1] = this.mutate(dna[1], 0.1)
-            this.dna[2] = this.mutate(dna[2], 10)
+            this.dna[2] = this.mutate(dna[2], 0.1)
             this.dna[3] = this.mutate(dna[3], 10)
+            this.dna[4] = this.mutate(dna[4], 10)
+            this.dna[5] = this.mutate(dna[5], 10)
         }
         else{
-            this.dna = [ random(-2,2),random(-2,2),random(0,150),random(0,150) ]
+            this.dna = [ random(-2,2),random(-2,2), random(-2,2),random(0,150),random(0,150),random(0,150)]
         }
     }
     
@@ -44,31 +46,55 @@ class Species{
     }
     update()
     {
-        this.health -= 0.002 
+        this.health -= 0.0015
         this.velocity.add(this.accleration)
         this.velocity.limit(this.maxspeed)
         this.location.add(this.velocity)
         this.accleration.multiply(0)
     }
 
-    behaviors(good , bad)
+    behaviors(good , bad, avoid)
     {
         //find species steering forces towards nearest food and poison saperately
-        var steerG = this.eat(good , 0.2, this.dna[2])
-        var steerB = this.eat(bad , -0.2, this.dna[3])
+        var steerG = this.eat(good , 0.3, this.dna[3])
+        var steerB = this.eat(bad , -0.2, this.dna[4])
+        var steerP = this.flee(avoid, this.dna[5])
         
         //give them their respective prioritty or importance
         steerG.multiply(this.dna[0])
         steerB.multiply(this.dna[1])
+        steerP.multiply(this.dna[2])
         
         // add them to their accleration
         this.accleration.add(steerG)
         this.accleration.add(steerB)
+        this.accleration.add(steerP)
     }
 
     dead()
     {
         return (this.health<0)
+    }
+   
+    flee(list, perception)
+    {
+        let min = Infinity
+        let object = null
+        for(let i = list.length-1 ; i>=0 ;i--)
+        {
+            var dist = Vector.sub(list[i].location, this.location)
+            dist = dist.magnitude()
+            if(min>dist && dist<perception)
+            {
+                min = dist
+                object = list[i]
+            }
+        }
+        if(object != null)
+        {
+            return this.seek(object.location)
+        }
+        return new Vector([0 ,0])
     }
 
     eat(list , nutrition , perception)

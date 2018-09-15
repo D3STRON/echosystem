@@ -4,16 +4,17 @@ class Predator{
         this.velocity= new Vector([ 0, -1])
         this.accleration = new Vector([ 0, 0])
         this.location = new Vector([ x, y])
-        this.maxspeed = 3.5
+        this.maxspeed = 2
         this.rad =13
         this.maxforce = 0.07
         this.compression = 0.9
-        this.dna = [ random(-2,2), random(-2,2), random(0,200), random(0,200)]
+        this.dna = [ random(-1,1), random(-1,1), random(0,50), random(0,50)]
     }
    
-    behaviors()
+    behaviors(Sp, Fo)
     {
-        var steerA = this.eat
+        var steerSp = this.eat(Sp, 0.3, this.dna[2])
+        var steerFo = this.eat(Fo, 0.1, this.dna[3])
     }
 
     eat(list, nutrition, perception)
@@ -24,7 +25,11 @@ class Predator{
         {
             var dist = Vector.sub(list[i].location, this.location)
             dist = dist.magnitude()
-            if(min>dist)
+            if(dist<5)
+            {
+                list.splice(i,1)
+            }
+            else if(min>dist)
             {
                 min = dist
                 object = list[i]
