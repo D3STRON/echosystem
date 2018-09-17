@@ -4,9 +4,10 @@ var foods =[]
 var poisons = []
 var poisonNo =10
 var foodNo = 50
-var speciesNo =20
+var predatorNo = 3
+var speciesNo =30
 var predators = [] 
-var savedSpecies
+var savedPredator
 function setup()
 {
     createCanvas(600,600)
@@ -16,8 +17,10 @@ function setup()
         foods.push(new Food())
         poisons.push(new Poison())
     }
-    predators.push(new Predator(random(height/2),random(width/2)))
-    predators.push(new Predator(random(height/2),random(width/2)))
+    for(let i =0 ; i< predatorNo; i++)
+    {
+        predators.push(new Predator(random(height/2),random(width/2)))
+    }
     for(let i =0 ;i< speciesNo ;i++)
     {
         species.push(new Species(random(height/2),random(width/2)))
@@ -28,39 +31,21 @@ function draw()
 {   
     counter +=1
     background(0)
-    if(random(1)<0.05)
+    if(random(1)<0.09)
     {
         foods.push(new Food())
     }
-    if(random(1)<0.005)
+    if(random(1)<0.007)
     {
         poisons.push(new Poison())
     }
-    for(let i=species.length-1 ; i>=0; i--)
+    
+    showLiving(species, foods, poisons, predators)
+    if(predators.length ==0 )
     {
-        species[i].boundary()
-        species[i].behaviors(foods, poisons, predators)
-        species[i].show()
-        species[i].update()
-        //cloning is done before splicing to ensure that clone is not done on spiced object
-        let newSpecies = species[i].clone()
-        if(newSpecies != null)
-        {
-            species.push(newSpecies)
-        }
-        if(species[i].dead())
-        {
-            foods.push(new Food(species[i].location.values[0], species[i].location.values[1]))
-            species.splice(i,1)
-        }
+        renew()
     }
-    for( let i = predators.length-1; i>=0 ;i--)
-    {
-        predators[i].think(foods, species)
-        predators[i].show()
-        predators[i].boundary()
-        predators[i].update()
-    }
+    showLiving(predators, foods, species)
     show(foods)
     show(poisons)
 }
@@ -70,5 +55,42 @@ function show(list)
     for(let i = 0 ; i<list.length;i++)
     {
         list[i].show()
+    }
+}
+
+function showLiving(list,list1, list2, list3 ,saved)
+{
+    for( let i = list.length-1; i>=0 ;i--)
+    {
+        list[i].behaviors(list1, list2, list3)
+        list[i].show()
+        list[i].boundary()
+        list[i].update()
+        let newItem = list[i].clone()
+        if(newItem != null)
+        {
+            if(list[i] instanceof Predator)
+            {
+                list[i].health = 0.4
+            }
+            list.push(newItem)
+        }
+        if(list[i].dead())
+        {
+            foods.push(new Food(list[i].location.values[0], list[i].location.values[1]))
+            if(list[i] instanceof Predator)
+            {
+                savedPredator = list[i]
+            }
+            list.splice(i,1)
+        }
+    }
+}
+
+function renew()
+{
+    for(let i =0 ; i< predatorNo; i++)
+    {
+        predators.push(new Predator(random(width) , random(height), savedPredator.brain))
     }
 }

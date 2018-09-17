@@ -1,33 +1,57 @@
 class Predator{
-    constructor(x,y , dna)
+    constructor(x,y , brain)
     {
         this.velocity= new Vector([ 0, -1])
         this.accleration = new Vector([ 0, 0])
         this.location = new Vector([ x, y])
-        this.maxspeed = 3.5
+        this.maxspeed = 4
         this.rad =13
         this.maxforce = 0.07
         this.compression = 0.9
         this.health = 1
-        this.brain = new NeuralNetwork(14, 5, 2)
+        if(brain)
+        {
+            this.brain = brain.copy()
+            this.brain.mutate(0.5)
+        }
+        else{
+            this.brain = new NeuralNetwork(15, 6, 2)
+        }
     }
-   
-    think(Foods , Species)
+
+    clone()
     {
-        let sp = this.detect(Species)
-        let tar = this.detect(Foods)
-        if(sp!= null && fd!= null)
+        if(random(0,1)<0.001 && this.health>0.8)
+        {
+            return new Predator(this.location.values[0] , this.location.values[1], this.brain)
+        }
+        return null
+    }
+
+    behaviors(Foods , Species)
+    {
+        let sp = this.detect(Species, 0.4)
+        let tar = this.detect(Foods, 0.2)
+        if(sp && tar)
         {
             let inputs = sp.location.values.concat(sp.accleration.values).concat(sp.velocity.values).concat(tar.location.values).concat(this.location.values).concat(this.accleration.values).concat(this.velocity.values)
-            console.log(inputs)
+            inputs.push(this.health)
             let outputs = this.brain.feedforward(inputs)
             if(outputs.data[0]>outputs.data[1])
+            {
+                tar = sp
+            }
+        }
+        if(sp || tar)
+        {
+            if(sp && !tar)
             {
                 tar = sp
             }
             this.seek(tar.location)
             this.accleration.add(this.steering)
         }
+        
     }
 
     detect(list, nutrition)
@@ -37,12 +61,11 @@ class Predator{
         for(let i = list.length-1 ; i>=0 ;i--)
         {
             var dist = Vector.sub(list[i].location, this.location)
-            var dist = Vector.sub(target, this.location)
             dist = dist.magnitude()
             if(dist<5)
             {
-                //list.splice(i,1)
-                //this.health += nutrition
+                list.splice(i,1)
+                this.health += nutrition
             }
             else if(min>dist)
             {
@@ -55,6 +78,7 @@ class Predator{
 
     update()
     {
+        this.health -= 0.0017
         this.velocity.add(this.accleration)
         this.velocity.limit(this.maxspeed)
         this.location.add(this.velocity)
@@ -73,6 +97,11 @@ class Predator{
             this.seek(new Vector([ height/2, width/2 ]))
             this.accleration.add(this.steering)
         }
+    }
+
+    dead()
+    {
+        return (this.health<0)
     }
 
     seek(target)
@@ -101,7 +130,9 @@ class Predator{
         {
             this.compression = 0.9
         }
-        var col = 255
+        var grn = color( 0, 255, 0)
+        var red = color( 255, 0 ,0)
+        var col = lerpColor(red, grn , this.health)
         fill(col)
         stroke(col)
         ellipse(0, this.rad-7, 0.5*this.rad*this.compression, this.rad*this.compression)

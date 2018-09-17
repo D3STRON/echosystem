@@ -38,7 +38,7 @@ class Species{
 
     clone()
     {
-        if(random(0,1)<0.001 && this.health>0.8)
+        if(random(0,1)<0.003 && this.health>0.8)
         {
             return new Species(this.location.values[0] , this.location.values[1], this.dna)
         }
