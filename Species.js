@@ -7,11 +7,13 @@ class Species{
         this.velocity = new Vector([0,-1])
         this.maxforce = 0.07
         this.rad = 8  
-        this.maxspeed = 4
+        this.maxspeed = 3
         this.compression = 0.9
         this.detectRadius = 20
         this.health =1
         this.mutation_rate = 0.5
+        this.clone_rate = 0.003
+        this.decay_rate = 0.002
         if(dna)
         {
             this.dna=[]
@@ -21,9 +23,10 @@ class Species{
             this.dna[3] = this.mutate(dna[3], 10)
             this.dna[4] = this.mutate(dna[4], 10)
             this.dna[5] = this.mutate(dna[5], 10)
+            this.dna[6] = this.mutate(dna[6], 0.1)
         }
         else{
-            this.dna = [ random(-1,1),random(-1,1), random(-1,1),random(0,150),random(0,150),random(0,150)]
+            this.dna = [ random(-1,1),random(-1,1), random(-1,1),random(0,150),random(0,150),random(0,150), random(0,1)]
         }
     }
     
@@ -38,7 +41,7 @@ class Species{
 
     clone()
     {
-        if(random(0,1)<0.003 && this.health>0.8)
+        if(random(0,1)<this.clone_rate && this.health>0.8)
         {
             return new Species(this.location.values[0] , this.location.values[1], this.dna)
         }
@@ -46,7 +49,7 @@ class Species{
     }
     update()
     {
-        this.health -= 0.002
+        this.health -= this.decay_rate
         this.velocity.add(this.accleration)
         this.velocity.limit(this.maxspeed)
         this.location.add(this.velocity)
@@ -160,8 +163,8 @@ class Species{
         // stroke(255, 0 , 0)
         // ellipse(0,0,this.dna[3])
 
-        var grn = color( 0, 255, 0)
-        var red = color( 255, 0 ,0)
+        var grn = color( 0, 255, 255*this.dna[6])
+        var red = color( 255, 0 ,255*this.dna[6])
         var col = lerpColor(red, grn , this.health)
         
         fill(col)
