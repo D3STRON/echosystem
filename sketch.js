@@ -71,7 +71,7 @@ function showLiving(list,list1, list2, list3 ,saved)
         {
             if(list[i] instanceof Predator)
             {
-                list[i].health = 0.4
+                list[i].health = 0.5
             }
             list.push(newItem)
         }

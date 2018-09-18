@@ -4,15 +4,18 @@ class Predator{
         this.velocity= new Vector([ 0, -1])
         this.accleration = new Vector([ 0, 0])
         this.location = new Vector([ x, y])
-        this.maxspeed = 4
+        this.maxspeed = 2
         this.rad =13
         this.maxforce = 0.07
         this.compression = 0.9
         this.health = 1
+        this.mutation_rate = 0.3
+        this.decay_rate = 0.002
+        this.clone_rate = 0.0007
         if(brain)
         {
             this.brain = brain.copy()
-            this.brain.mutate(0.5)
+            this.brain.mutate(this.mutation_rate)
         }
         else{
             this.brain = new NeuralNetwork(15, 6, 2)
@@ -21,7 +24,7 @@ class Predator{
 
     clone()
     {
-        if(random(0,1)<0.001 && this.health>0.8)
+        if(random(0,1)<this.clone_rate && this.health>0.8)
         {
             return new Predator(this.location.values[0] , this.location.values[1], this.brain)
         }
@@ -78,7 +81,7 @@ class Predator{
 
     update()
     {
-        this.health -= 0.0017
+        this.health -= this.decay_rate
         this.velocity.add(this.accleration)
         this.velocity.limit(this.maxspeed)
         this.location.add(this.velocity)

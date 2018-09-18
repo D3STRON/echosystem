@@ -23,7 +23,7 @@ class Species{
             this.dna[5] = this.mutate(dna[5], 10)
         }
         else{
-            this.dna = [ random(-2,2),random(-2,2), random(-2,2),random(0,150),random(0,150),random(0,150)]
+            this.dna = [ random(-1,1),random(-1,1), random(-1,1),random(0,150),random(0,150),random(0,150)]
         }
     }
     
