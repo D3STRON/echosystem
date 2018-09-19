@@ -4,14 +4,14 @@ class Predator{
         this.velocity= new Vector([ 0, -1])
         this.accleration = new Vector([ 0, 0])
         this.location = new Vector([ x, y])
-        this.maxspeed = 2
+        this.maxspeed = 3
         this.rad =13
         this.maxforce = 0.07
         this.compression = 0.9
         this.health = 1
         this.mutation_rate = 0.3
-        this.decay_rate = 0.002
-        this.clone_rate = 0.0007
+        this.decay_rate = 0.003
+        this.clone_rate = 0.002
         if(brain)
         {
             this.brain = brain.copy()
@@ -40,14 +40,14 @@ class Predator{
             let inputs = sp.location.values.concat(sp.accleration.values).concat(sp.velocity.values).concat(tar.location.values).concat(this.location.values).concat(this.accleration.values).concat(this.velocity.values)
             inputs.push(this.health)
             let outputs = this.brain.feedforward(inputs)
-            if(outputs.data[0]>outputs.data[1])
+            if(outputs.data[0]>outputs.data[1] && Species.length>1)
             {
                 tar = sp
             }
         }
         if(sp || tar)
         {
-            if(sp && !tar)
+            if(sp && !tar  && Species.length>1)
             {
                 tar = sp
             }

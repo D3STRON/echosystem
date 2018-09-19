@@ -12,7 +12,7 @@ class Species{
         this.detectRadius = 20
         this.health =1
         this.mutation_rate = 0.5
-        this.clone_rate = 0.003
+        this.clone_rate = 0.004
         this.decay_rate = 0.002
         if(dna)
         {
@@ -23,7 +23,7 @@ class Species{
             this.dna[3] = this.mutate(dna[3], 10)
             this.dna[4] = this.mutate(dna[4], 10)
             this.dna[5] = this.mutate(dna[5], 10)
-            this.dna[6] = this.mutate(dna[6], 0.1)
+            this.dna[6] = this.mutate(dna[6], 0.3)
         }
         else{
             this.dna = [ random(-1,1),random(-1,1), random(-1,1),random(0,150),random(0,150),random(0,150), random(0,1)]
@@ -173,4 +173,9 @@ class Species{
         rotate(-1*Math.atan(Ratio))
         translate(-1*x,-1*y)
     }
+}
+
+function sigmoid(x)
+{
+   return 1/(1+Math.exp(-x))
 }

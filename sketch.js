@@ -35,7 +35,7 @@ function draw()
     {
         foods.push(new Food())
     }
-    if(random(1)<0.007)
+    if(random(1)<0.01)
     {
         poisons.push(new Poison())
     }
@@ -71,7 +71,7 @@ function showLiving(list,list1, list2, list3 ,saved)
         {
             if(list[i] instanceof Predator)
             {
-                list[i].health = 0.5
+                list[i].health = 0.4
             }
             list.push(newItem)
         }
